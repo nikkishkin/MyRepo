@@ -1,0 +1,26 @@
+﻿@using TaskManager.Web.Controllers
+@model TaskManager.Web.Models.UserListModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="teamEntry entry">
+    @Model.TeamName
+</div>
+
+@foreach (var member in Model.Members)
+{
+    <div class="userEntry entry">
+        @*@Html.ActionLink()*@
+        @member.FullName (@member.Username)
+    </div>
+}
+
+<form action="@Url.Action(UsersController.AddUserAction, UsersController.ControllerName)" method="post" class="fixedForm" id="addUserForm">
+    @Html.LabelFor(m => m.NewUser.Username)
+    @Html.TextBoxFor(m => m.NewUser.Username, new { @class = "textInput" })
+    @Html.HiddenFor(m => m.NewUser.TeamId)<br><br>
+    <input type="submit" value="Add user" name="submit_adduser" class="btn" id="addUserBtn">
+</form>
+

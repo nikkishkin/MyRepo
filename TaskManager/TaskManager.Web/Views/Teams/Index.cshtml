@@ -1,0 +1,26 @@
+﻿@using TaskManager.Web.Controllers
+@model TaskManager.Web.Models.TeamListModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@foreach (var team in Model.Teams)
+{
+    <div class="teamEntry entry">
+        @Html.ActionLink(team.Name, UsersController.IndexAction, UsersController.ControllerName, new {teamId = team.Id})
+    </div>
+}
+
+<form action="@Url.Action(TeamsController.AddTeamAction, TeamsController.ControllerName)" method="post" class="fixedForm" id="addTeamForm">
+    @Html.LabelFor(m => m.NewTeam.Name)<br>
+    @Html.TextBoxFor(m => m.NewTeam.Name, new {@class = "textInput"})<br>
+    @Html.LabelFor(m => m.NewTeam.Members)<br>
+    @Html.TextBoxFor(m => m.NewTeam.Members, new {@class = "textInput"})<br>
+    @Html.HiddenFor(m => m.NewTeam.ManagerId)<br>
+    <input type="submit" value="Add team" name="submit_addteam" class="btn" id="addTeamBtn">
+</form>
+
+<form action="@Url.Action(AccountController.LogOutAction, AccountController.ControllerName)" method="post" class="fixedForm logOutForm" id="logOutTeams">
+    <input type="submit" value="Log out" name="submit_logout" class="btn" id="logOutBtn">
+</form>

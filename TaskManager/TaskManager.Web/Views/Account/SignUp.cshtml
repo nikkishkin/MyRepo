@@ -1,0 +1,34 @@
+﻿@using TaskManager.Web.Controllers
+@model TaskManager.Web.Models.SignUpModel
+
+@{
+    ViewBag.Title = "SignUp";
+}
+
+<a href="#" class="goBack" onclick="history.go(-1); return false;">Back</a>
+
+<form class="authorization" action="@Url.Action(AccountController.SignUpAction, AccountController.ControllerName)" method="post" id="myform" autocomplete="off">
+    @Html.ValidationSummary(false)
+    @Html.LabelFor(x => x.Username)<br>
+    @Html.TextBoxFor(x => x.Username, new { @class = "textInput" })
+    <br>
+    @Html.ValidationSummary(false)
+    @Html.LabelFor(x => x.FirstName)<br>
+    @Html.TextBoxFor(x => x.FirstName, new { @class = "textInput" })
+    <br>
+    @Html.ValidationSummary(false)
+    @Html.LabelFor(x => x.LastName)<br>
+    @Html.TextBoxFor(x => x.LastName, new { @class = "textInput" })
+    <br>
+    @Html.LabelFor(x => x.Password)<br>
+    @Html.TextBoxFor(x => x.Password, new { @class = "textInput" })
+    <br>
+    @Html.LabelFor(x => x.Email)<br>
+    @Html.TextBoxFor(x => x.Email, new { @class = "textInput" })
+    <br>
+    @Html.LabelFor(x => x.IsManager)<br>
+    @Html.CheckBoxFor(x => x.IsManager)
+    <br><br>
+    <input type="submit" value="Submit" class="btn" name="submit_authorize">
+    @Html.HiddenFor(x => x.ReturnUrl)
+</form>

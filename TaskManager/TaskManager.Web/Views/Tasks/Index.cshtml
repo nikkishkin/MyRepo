@@ -1,0 +1,32 @@
+﻿@using TaskManager.Web.Controllers
+@model TaskManager.Web.Models.TaskListModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="teamEntry entry">
+    @Model.TeamName
+</div>
+
+@foreach (var task in Model.Tasks)
+{
+    <div class="taskEntry entry">
+        @*@Html.ActionLink()*@
+        @task.Name
+    </div>
+}
+
+@if (Model.IsManager)
+{
+    <form action="@Url.Action(TasksController.AddTaskAction, TasksController.ControllerName)" method="post" class="fixedForm" id="addTaskForm">
+        @Html.LabelFor(m => m.NewTask.Name)
+        @Html.TextBoxFor(m => m.NewTask.Name, new { @class = "textInput" })
+        @Html.LabelFor(m => m.NewTask.Content)
+        @Html.TextBoxFor(m => m.NewTask.Content, new { @class = "textInput" })
+        @Html.LabelFor(m => m.NewTask.Workers)
+        @Html.TextBoxFor(m => m.NewTask.Workers, new { @class = "textInput" })
+        @Html.HiddenFor(m => m.NewTask.TeamId)<br><br>
+        <input type="submit" value="Add task" name="submit_addtask" class="btn" id="addTaskBtn">
+    </form>
+}

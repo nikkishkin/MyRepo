@@ -1,0 +1,47 @@
+﻿@using TaskManager.Web.Controllers
+@using TaskManager.Web.Models
+@model TaskManager.Web.Models.TaskDetailsModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<br>
+<div class="taskEntry entry">
+    <span class="taskContent">@Model.Task.Content</span>
+    <br>Created on @Model.Task.Date
+</div>
+
+<div class="taskEntry entry">
+    Workers:
+    <ul>
+        @foreach (var worker in Model.Task.Workers.Take(Model.Task.Workers.Count()))
+        {
+            <li>@worker.FullName (@worker.Username)</li>
+        }
+    </ul>
+</div>
+
+<div class="taskEntry entry">
+    Readiness: @(Model.Task.Percentage)%
+</div>
+
+<br>
+@foreach (var comment in @Model.Task.Comments)
+{
+    <div class="commentsEntry entry">
+        <span class="commentContent">@comment.Content</span><br>
+        <span class="commentDate">@comment.Date</span>
+        <span class="commentUser"><b>@comment.UserFullName</b> (@comment.Username)</span>
+    </div>
+}
+
+@if (Model.UserRole != TaskDetailsModel.TaskRole.Visitor)
+{
+    <form action="@Url.Action(CreationController.AddCommentAction, TasksController.ControllerName)" method="post" class="fixedForm" id="addCommentForm">
+        @Html.TextBoxFor(m => m.NewComment.Content, new { @class = "textInput" })
+        @Html.HiddenFor(m => m.NewComment.TaskId)
+        @Html.HiddenFor(m => m.NewComment.UserId)<br><br>
+        <input type="submit" value="Add comment" name="submit_addcommment" class="btn" id="addcommentBtn">
+    </form>
+}

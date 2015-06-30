@@ -1,0 +1,2 @@
+Automation CreateDb AppDb
+pause

@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TManagerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Content" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="TaskId" Type="int" />
+          <Property Name="UserId" Type="int" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Percentage" Type="int" />
+          <Property Name="Content" Type="nvarchar" MaxLength="1000" />
+          <Property Name="IsDone" Type="bit" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="TeamId" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="ManagerId" Type="int" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" />
+          <Property Name="Password" Type="nvarchar" MaxLength="100" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="First Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Last Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsManager" Type="bit" />
+          <Property Name="TeamId" Type="int" />
+        </EntityType>
+        <EntityType Name="WorkerTask">
+          <Key>
+            <PropertyRef Name="WorkerId" />
+            <PropertyRef Name="TaskId" />
+          </Key>
+          <Property Name="WorkerId" Type="int" Nullable="false" />
+          <Property Name="TaskId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_COMMENT_REFERENCE_TASK">
+          <End Role="Task" Type="Self.Task" Multiplicity="0..1" />
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_COMMENT_REFERENCE_USER">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TASK_REFERENCE_TEAM">
+          <End Role="Team" Type="Self.Team" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TEAM_REFERENCE_USER">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USER_REFERENCE_TEAM">
+          <End Role="Team" Type="Self.Team" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WORKERTA_REFERENCE_TASK">
+          <End Role="Task" Type="Self.Task" Multiplicity="1" />
+          <End Role="WorkerTask" Type="Self.WorkerTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkerTask">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WORKERTA_REFERENCE_USER">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="WorkerTask" Type="Self.WorkerTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkerTask">
+              <PropertyRef Name="WorkerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TManagerModelStoreContainer">
+          <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkerTask" EntityType="Self.WorkerTask" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_COMMENT_REFERENCE_TASK" Association="Self.FK_COMMENT_REFERENCE_TASK">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_COMMENT_REFERENCE_USER" Association="Self.FK_COMMENT_REFERENCE_USER">
+            <End Role="User" EntitySet="User" />
+            <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TASK_REFERENCE_TEAM" Association="Self.FK_TASK_REFERENCE_TEAM">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TEAM_REFERENCE_USER" Association="Self.FK_TEAM_REFERENCE_USER">
+            <End Role="User" EntitySet="User" />
+            <End Role="Team" EntitySet="Team" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USER_REFERENCE_TEAM" Association="Self.FK_USER_REFERENCE_TEAM">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WORKERTA_REFERENCE_TASK" Association="Self.FK_WORKERTA_REFERENCE_TASK">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="WorkerTask" EntitySet="WorkerTask" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WORKERTA_REFERENCE_USER" Association="Self.FK_WORKERTA_REFERENCE_USER">
+            <End Role="User" EntitySet="User" />
+            <End Role="WorkerTask" EntitySet="WorkerTask" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Content" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Percentage" Type="Int32" />
+          <NavigationProperty Name="Workers" Relationship="TManagerModel.WorkerTask" FromRole="Task" ToRole="User" />
+          <Property Name="IsDone" Type="Boolean" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Comments" Relationship="TManagerModel.FK_COMMENT_REFERENCE_TASK" FromRole="Task" ToRole="Comment" />
+          <Property Name="TeamId" Type="Int32" />
+          <NavigationProperty Name="Team" Relationship="TManagerModel.FK_TASK_REFERENCE_TEAM" FromRole="Task" ToRole="Team" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TasksForWorker" Relationship="TManagerModel.WorkerTask" FromRole="User" ToRole="Task" />
+          <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="First_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Comments" Relationship="TManagerModel.FK_COMMENT_REFERENCE_USER" FromRole="User" ToRole="Comment" />
+          <Property Name="IsManager" Type="Boolean" />
+          <Property Name="TeamId" Type="Int32" />
+          <NavigationProperty Name="TeamsForManager" Relationship="TManagerModel.FK_TEAM_REFERENCE_USER" FromRole="User" ToRole="Team" />
+          <NavigationProperty Name="TeamForMember" Relationship="TManagerModel.FK_USER_REFERENCE_TEAM" FromRole="User" ToRole="Team" />
+        </EntityType>
+        <EntityContainer Name="TManagerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Task" EntityType="Self.Task" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(TManagerModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(TManagerModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <AssociationSet Name="WorkerTask" Association="TManagerModel.WorkerTask">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <EntitySet Name="Comment" EntityType="TManagerModel.Comment" />
+          <AssociationSet Name="FK_COMMENT_REFERENCE_TASK" Association="TManagerModel.FK_COMMENT_REFERENCE_TASK">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_COMMENT_REFERENCE_USER" Association="TManagerModel.FK_COMMENT_REFERENCE_USER">
+            <End Role="User" EntitySet="User" />
+            <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <EntitySet Name="Team" EntityType="TManagerModel.Team" />
+          <AssociationSet Name="FK_TASK_REFERENCE_TEAM" Association="TManagerModel.FK_TASK_REFERENCE_TEAM">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TEAM_REFERENCE_USER" Association="TManagerModel.FK_TEAM_REFERENCE_USER">
+            <End Role="User" EntitySet="User" />
+            <End Role="Team" EntitySet="Team" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USER_REFERENCE_TEAM" Association="TManagerModel.FK_USER_REFERENCE_TEAM">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <Association Name="WorkerTask">
+          <End Type="TManagerModel.Task" Role="Task" Multiplicity="*" />
+          <End Type="TManagerModel.User" Role="User" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="TaskId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <NavigationProperty Name="Task" Relationship="TManagerModel.FK_COMMENT_REFERENCE_TASK" FromRole="Comment" ToRole="Task" />
+          <NavigationProperty Name="User" Relationship="TManagerModel.FK_COMMENT_REFERENCE_USER" FromRole="Comment" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_COMMENT_REFERENCE_TASK">
+          <End Type="TManagerModel.Task" Role="Task" Multiplicity="0..1" />
+          <End Type="TManagerModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_COMMENT_REFERENCE_USER">
+          <End Type="TManagerModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="TManagerModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ManagerId" Type="Int32" />
+          <NavigationProperty Name="Tasks" Relationship="TManagerModel.FK_TASK_REFERENCE_TEAM" FromRole="Team" ToRole="Task" />
+          <NavigationProperty Name="Manager" Relationship="TManagerModel.FK_TEAM_REFERENCE_USER" FromRole="Team" ToRole="User" />
+          <NavigationProperty Name="Members" Relationship="TManagerModel.FK_USER_REFERENCE_TEAM" FromRole="Team" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_TASK_REFERENCE_TEAM">
+          <End Type="TManagerModel.Team" Role="Team" Multiplicity="0..1" />
+          <End Type="TManagerModel.Task" Role="Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TEAM_REFERENCE_USER">
+          <End Type="TManagerModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="TManagerModel.Team" Role="Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USER_REFERENCE_TEAM">
+          <End Type="TManagerModel.Team" Role="Team" Multiplicity="0..1" />
+          <End Type="TManagerModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TManagerModelStoreContainer" CdmEntityContainer="TManagerEntities">
+          <EntitySetMapping Name="Task">
+            <EntityTypeMapping TypeName="TManagerModel.Task">
+              <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="IsDone" ColumnName="IsDone" />
+                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="TManagerModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="IsManager" ColumnName="IsManager" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last Name" />
+                <ScalarProperty Name="First_Name" ColumnName="First Name" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="WorkerTask" TypeName="TManagerModel.WorkerTask" StoreEntitySet="WorkerTask">
+            <EndProperty Name="Task">
+              <ScalarProperty Name="Id" ColumnName="TaskId" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="Id" ColumnName="WorkerId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="Comment">
+            <EntityTypeMapping TypeName="TManagerModel.Comment">
+              <MappingFragment StoreEntitySet="Comment">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Team">
+            <EntityTypeMapping TypeName="TManagerModel.Team">
+              <MappingFragment StoreEntitySet="Team">
+                <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
