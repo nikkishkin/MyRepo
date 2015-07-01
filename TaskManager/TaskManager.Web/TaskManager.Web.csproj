@@ -126,6 +126,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Configuration\DependencyConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TaskManagerController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Controllers\TeamsController.cs" />
@@ -134,20 +135,21 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AddCommentModel.cs" />
-    <Compile Include="Models\AddTaskModel.cs" />
-    <Compile Include="Models\AddUserModel.cs" />
-    <Compile Include="Models\CommentModel.cs" />
-    <Compile Include="Models\SignUpModel.cs" />
-    <Compile Include="Models\TaskDetailsModel.cs" />
-    <Compile Include="Models\TaskListModel.cs" />
-    <Compile Include="Models\TaskModel.cs" />
-    <Compile Include="Models\AddTeamModel.cs" />
-    <Compile Include="Models\LogInModel.cs" />
-    <Compile Include="Models\TeamListModel.cs" />
-    <Compile Include="Models\TeamModel.cs" />
-    <Compile Include="Models\UserListModel.cs" />
-    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\Tasks\AddCommentModel.cs" />
+    <Compile Include="Models\Tasks\SetReadinessModel.cs" />
+    <Compile Include="Models\Tasks\AddTaskModel.cs" />
+    <Compile Include="Models\Users\AddUserModel.cs" />
+    <Compile Include="Models\Tasks\CommentModel.cs" />
+    <Compile Include="Models\Account\SignUpModel.cs" />
+    <Compile Include="Models\Tasks\TaskDetailsModel.cs" />
+    <Compile Include="Models\Tasks\TaskListModel.cs" />
+    <Compile Include="Models\Tasks\TaskModel.cs" />
+    <Compile Include="Models\Teams\AddTeamModel.cs" />
+    <Compile Include="Models\Account\LogInModel.cs" />
+    <Compile Include="Models\Teams\TeamListModel.cs" />
+    <Compile Include="Models\Teams\TeamModel.cs" />
+    <Compile Include="Models\Users\UserListModel.cs" />
+    <Compile Include="Models\Users\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

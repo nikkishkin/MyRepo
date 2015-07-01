@@ -93,4 +93,51 @@ public class TaskModel
     public bool IsDone { get; set; }
 }
 
+[HttpPost]
+public ActionResult LogIn(LogInModel userModel)
+{
+    if (ModelState.IsValid)
+    {
+        if (_manager.UserExists(userModel.Username))
+        {
+            User dbUser = _manager.GetUser(userModel.Username);
 
+            try
+            {
+                if (BCrypt.Net.BCrypt.Verify(userModel.Password, dbUser.Password))
+                {
+                    Authorize(dbUser);
+
+                    var redirectResult = GetRedirectResultOfReturnUrl(userModel.ReturnUrl);
+                    if (redirectResult != null)
+                    {
+                        return redirectResult;
+                    }
+
+                    if (UserPrincipal.CurrentPrincipal.IsManager)
+                    {
+                        return Redirect(Url.Action(TeamsController.IndexAction, TeamsController.ControllerName));
+                    }
+                    return Redirect(Url.Action(TasksController.IndexAction, TasksController.ControllerName));
+                }
+
+                ModelState.AddModelError("Password", "Password is wrong!");
+                SaveModelState(ModelState);
+                return RedirectToAction(LogInAction);
+            }
+            catch (SaltParseException)
+            {
+                ModelState.AddModelError("Password", "Password is wrong!");
+                SaveModelState(ModelState);
+                return RedirectToAction(LogInAction);
+            }
+        }
+
+        ModelState.AddModelError("Username", "This username doesn't exist");
+        SaveModelState(ModelState);
+        return RedirectToAction(LogInAction);
+    }
+
+    SaveModelState(ModelState);
+    return RedirectToAction(LogInAction);
+}

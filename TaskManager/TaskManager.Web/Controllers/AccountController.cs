@@ -7,6 +7,7 @@ using TaskManager.Core;
 using TaskManager.Entities;
 using TaskManager.Logic.Services;
 using TaskManager.Web.Models;
+using TaskManager.Web.Models.Account;
 
 namespace TaskManager.Web.Controllers
 {
@@ -29,11 +30,7 @@ namespace TaskManager.Web.Controllers
 
         public ActionResult LogIn(string returnUrl)
         {
-            ModelStateDictionary restoredModelState = (ModelStateDictionary)TempData["mstat"];
-            if (restoredModelState != null)
-            {
-                ModelState.Merge(restoredModelState);
-            }
+            RestoreModelState();
             return View(new LogInModel {ReturnUrl = returnUrl});
         }
 
@@ -44,52 +41,57 @@ namespace TaskManager.Web.Controllers
             return RedirectToAction(LogInAction);
         }
 
+        // Verify that user exists and password is right
+        private void Validate(User dbUser, LogInModel logInModel)
+        {
+            if (dbUser == null)
+            {
+                ModelState.AddModelError("Username", "This username doesn't exist");
+            }
+            else
+            {
+                try
+                {
+                    if (!BCrypt.Net.BCrypt.Verify(logInModel.Password, dbUser.Password))
+                    {
+                        ModelState.AddModelError("Password", "Password is wrong!");
+                    }
+                }
+                catch (SaltParseException)
+                {
+                    ModelState.AddModelError("Password", "Password is wrong!");
+                }
+            }
+        }
+
         [HttpPost]
         public ActionResult LogIn(LogInModel userModel)
         {
+            User dbUser = null;
             if (ModelState.IsValid)
             {
-                if (_manager.UserExists(userModel.Username))
-                {
-                    User dbUser = _manager.GetUser(userModel.Username);
-
-                    try
-                    {
-                        if (BCrypt.Net.BCrypt.Verify(userModel.Password, dbUser.Password))
-                        {
-                            Authorize(dbUser);
-
-                            var redirectResult = GetRedirectResultOfReturnUrl(userModel.ReturnUrl);
-                            if (redirectResult != null)
-                            {
-                                return redirectResult;
-                            }
-
-                            if (UserPrincipal.CurrentPrincipal.IsManager)
-                            {
-                                return Redirect(Url.Action(TeamsController.IndexAction, TeamsController.ControllerName));
-                            }
-                            return Redirect(Url.Action(TasksController.IndexAction, TasksController.ControllerName));
-                        }
-
-                        ModelState.AddModelError("Password", "Password is wrong!");
-                        TempData["mstat"] = ModelState;
-                        return RedirectToAction(LogInAction);
-                    }
-                    catch (SaltParseException)
-                    {
-                        ModelState.AddModelError("Password", "Password is wrong!");
-                        TempData["mstat"] = ModelState;
-                        return RedirectToAction(LogInAction);
-                    }
-                }
-
-                ModelState.AddModelError("Username", "This username doesn't exist");
-                TempData["mstat"] = ModelState;
-                return RedirectToAction(LogInAction);
+                dbUser = _manager.GetUser(userModel.Username);;
+                Validate(dbUser, userModel);
             }
 
-            TempData["mstat"] = ModelState;
+            if (ModelState.IsValid)
+            {
+                Authorize(dbUser);
+
+                var redirectResult = GetRedirectResultOfReturnUrl(userModel.ReturnUrl);
+                if (redirectResult != null)
+                {
+                    return redirectResult;
+                }
+
+                if (UserPrincipal.CurrentPrincipal.IsManager)
+                {
+                    return Redirect(Url.Action(TeamsController.IndexAction, TeamsController.ControllerName));
+                }
+                return Redirect(Url.Action(TasksController.IndexAction, TasksController.ControllerName));
+            }
+
+            SaveModelState(ModelState);
             return RedirectToAction(LogInAction);
         }
 
@@ -148,11 +150,7 @@ namespace TaskManager.Web.Controllers
 
         public ActionResult SignUp(string returnUrl)
         {
-            ModelStateDictionary restoredModelState = (ModelStateDictionary)TempData["mstat"];
-            if (restoredModelState != null)
-            {
-                ModelState.Merge(restoredModelState);
-            }
+            RestoreModelState();
             return View(new SignUpModel { ReturnUrl = returnUrl });
         }
         
@@ -164,7 +162,7 @@ namespace TaskManager.Web.Controllers
                 if (_manager.UserExists(userModel.Username))
                 {
                     ModelState.AddModelError("Username", "Sorry! This username already exists");
-                    TempData["mstat"] = ModelState;
+                    SaveModelState(ModelState);
                     return RedirectToAction(SignUpAction);
                 }
 
@@ -195,7 +193,7 @@ namespace TaskManager.Web.Controllers
                 return Redirect(Url.Action(TasksController.IndexAction, TasksController.ControllerName));
             }
 
-            TempData["mstat"] = ModelState;
+            SaveModelState(ModelState);
             return RedirectToAction(SignUpAction);
         }
     }

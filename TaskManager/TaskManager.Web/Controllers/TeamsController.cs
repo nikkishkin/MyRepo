@@ -7,6 +7,8 @@ using TaskManager.Entities;
 using TaskManager.Logic.Services;
 using TaskManager.Web.Filters;
 using TaskManager.Web.Models;
+using TaskManager.Web.Models.Teams;
+using TaskManager.Web.Models.Users;
 
 namespace TaskManager.Web.Controllers
 {
@@ -27,16 +29,7 @@ namespace TaskManager.Web.Controllers
 
         public ActionResult Index()
         {
-            //if (!UserPrincipal.CurrentPrincipal.IsManager)
-            //{
-            //    return View("Error");
-            //}
-
-            ModelStateDictionary restoredModelState = (ModelStateDictionary)TempData["mstat"];
-            if (restoredModelState != null)
-            {
-                ModelState.Merge(restoredModelState);
-            }
+            RestoreModelState();
 
             int managerId = UserPrincipal.CurrentPrincipal.UserId;
             IEnumerable<Team> teams = _manager.GetTeamsOfManager(managerId);
@@ -61,37 +54,40 @@ namespace TaskManager.Web.Controllers
             return View(model);
         }
 
+        private void ValidateTeamModel(AddTeamModel teamModel)
+        {
+            string[] invalidUsers;
+            if (!_manager.WorkersExist(teamModel.Members, out invalidUsers))
+            {
+                ModelState.AddModelError("Workers",
+                    "Some workers were not recognized: " + String.Join(", ", invalidUsers));
+            }
+
+            if (!_manager.AreFreeWorkers(teamModel.Members, out invalidUsers))
+            {
+                ModelState.AddModelError("Workers",
+                    "Some workers are already in teams: " + String.Join(", ", invalidUsers));
+            }
+        }
+
         [HttpPost]
         public ActionResult AddTeam(TeamListModel teamList)
         {
+            AddTeamModel teamModel = teamList.NewTeam;
             if (ModelState.IsValid)
             {
-                AddTeamModel teamModel = teamList.NewTeam;
-
-                string[] invalidUsers;
-                if (!_manager.WorkersExist(teamModel.Members, out invalidUsers))
-                {
-                    ModelState.AddModelError("Workers",
-                        "Some workers were not recognized: " + String.Join(", ", invalidUsers));
-                }
-
-                if (!_manager.AreFreeWorkers(teamModel.Members, out invalidUsers))
-                {
-                    ModelState.AddModelError("Workers",
-                        "Some workers are already in teams: " + String.Join(", ", invalidUsers));
-                }
-
-                if (invalidUsers != null)
-                {
-                    TempData["mstat"] = ModelState;
-                    return RedirectToAction(IndexAction);
-                }
-
-                _manager.CreateTeam(teamModel.Name, teamModel.Members, teamModel.ManagerId);
-                return RedirectToAction(IndexAction);
+                ValidateTeamModel(teamModel);
             }
 
-            TempData["mstat"] = ModelState;
+            if (ModelState.IsValid)
+            {
+                _manager.CreateTeam(teamModel.Name, teamModel.Members, teamModel.ManagerId);
+            }
+            else
+            {
+                SaveModelState(ModelState);
+            }
+
             return RedirectToAction(IndexAction);
         }
     }

@@ -1,6 +1,7 @@
 ﻿@using TaskManager.Web.Controllers
 @using TaskManager.Web.Models
-@model TaskManager.Web.Models.TaskDetailsModel
+@using TaskManager.Web.Models.Tasks
+@model TaskManager.Web.Models.Tasks.TaskDetailsModel
 
 @{
     ViewBag.Title = "Details";
@@ -38,10 +39,35 @@
 
 @if (Model.UserRole != TaskDetailsModel.TaskRole.Visitor)
 {
-    <form action="@Url.Action(CreationController.AddCommentAction, TasksController.ControllerName)" method="post" class="fixedForm" id="addCommentForm">
+    <form action="@Url.Action(TasksController.AddCommentAction, TasksController.ControllerName)" method="post" class="fixedForm" id="addCommentForm">       
         @Html.TextBoxFor(m => m.NewComment.Content, new { @class = "textInput" })
         @Html.HiddenFor(m => m.NewComment.TaskId)
         @Html.HiddenFor(m => m.NewComment.UserId)<br><br>
         <input type="submit" value="Add comment" name="submit_addcommment" class="btn" id="addcommentBtn">
     </form>
 }
+
+@if (Model.UserRole == TaskDetailsModel.TaskRole.Manager)
+{
+    <form action="@Url.Action(TasksController.AddTaskWorkerAction, TasksController.ControllerName)" method="post" class="fixedForm" id="addTaskWorkerForm">
+        @Html.LabelFor(m => m.NewWorker.Username)<br>
+        @Html.TextBoxFor(m => m.NewWorker.Username, new { @class = "textInput" })
+        @Html.HiddenFor(m => m.NewWorker.TaskId)<br><br>
+        <input type="submit" value="Add user" name="submit_adduser" class="btn" id="addUserBtn">
+    </form>
+}
+
+@if (Model.UserRole == TaskDetailsModel.TaskRole.Worker)
+{
+    <form action="@Url.Action(TasksController.SetReadinessAction, TasksController.ControllerName)" method="post" class="fixedForm" id="setReadinessForm">
+        @Html.ValidationSummary(false)
+        @Html.LabelFor(m => m.NewReadiness.Percentage)<br>
+        @Html.TextBoxFor(m => m.NewReadiness.Percentage, new { @class = "textInput" })
+        @Html.HiddenFor(m => m.NewReadiness.TaskId)<br><br>
+        <input type="submit" value="Set readiness" name="submit_setreadiness" class="btn" id="addUserBtn">
+    </form>
+}
+
+<form action="@Url.Action(AccountController.LogOutAction, AccountController.ControllerName)" method="post" class="" id="logOutForm">
+    <input type="submit" value="Log out" name="submit_logout" class="btn" id="logOutBtn">
+</form>

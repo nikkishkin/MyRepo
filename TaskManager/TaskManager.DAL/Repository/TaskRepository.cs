@@ -33,6 +33,13 @@ namespace TaskManager.DAL.Repository
         public Task GetTask(int id)
         {
             return _unitOfWork.GetContext().Task.SingleOrDefault(t => t.Id == id);
-        } 
+        }
+
+        public void SetReadiness(int percentage, int taskId)
+        {
+            Task task = GetTask(taskId);
+            task.Percentage = percentage;
+            _unitOfWork.GetContext().SaveChanges();
+        }
     }
 }

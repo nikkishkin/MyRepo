@@ -23,11 +23,17 @@ namespace TaskManager.DAL.Repository
         public void AddTeam(Team team)
         {
             _unitOfWork.GetContext().Team.Add(team);
+            _unitOfWork.GetContext().SaveChanges();
         }
 
         public Team GetTeam(int id)
         {
             return _unitOfWork.GetContext().Team.SingleOrDefault(t => t.Id == id);
+        }
+
+        public void AddTeamMember(int teamId, int userId)
+        {
+
         }
     }
 }

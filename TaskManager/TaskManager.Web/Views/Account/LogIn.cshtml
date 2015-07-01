@@ -1,5 +1,5 @@
 ﻿@using TaskManager.Web.Controllers
-@model TaskManager.Web.Models.LogInModel
+@model TaskManager.Web.Models.Account.LogInModel
 
 @{
     ViewBag.Title = "LogIn";
@@ -17,7 +17,7 @@
     @Html.TextBoxFor(x => x.Username, new { @class = "textInput" })
     <br>
     @Html.LabelFor(x => x.Password)<br>
-    @Html.TextBoxFor(x => x.Password, new {@class = "textInput"})
+    @Html.PasswordFor(x => x.Password, new {@class = "textInput"})
     <br><br>
     <input type="submit" value="Log in" class="btn" name="submit_authorize">
     @Html.HiddenFor(x => x.ReturnUrl)

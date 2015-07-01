@@ -6,6 +6,8 @@ using TaskManager.Core;
 using TaskManager.Entities;
 using TaskManager.Logic.Services;
 using TaskManager.Web.Models;
+using TaskManager.Web.Models.Tasks;
+using TaskManager.Web.Models.Users;
 using Task = TaskManager.Entities.Task;
 
 namespace TaskManager.Web.Controllers
@@ -20,6 +22,7 @@ namespace TaskManager.Web.Controllers
         public const string AddTaskAction = "AddTask";
         public const string AddTaskWorkerAction = "AddTaskWorker";
         public const string AddCommentAction = "AddComment";
+        public const string SetReadinessAction = "SetReadiness";
 
         private const string NoTeamView = "NoTeam";
 
@@ -50,24 +53,22 @@ namespace TaskManager.Web.Controllers
             Team team = _manager.GetTeam(teamId.Value);
 
             //Verify that team exists, and current user is manager or member of team
-            if (UserPrincipal.CurrentPrincipal == null || team == null ||
+            if (team == null ||
                 (team.ManagerId != UserPrincipal.CurrentPrincipal.UserId &&
                  team.Members.All(m => m.Id != UserPrincipal.CurrentPrincipal.UserId)))
             {
                 return View(ErrorView);
             }
 
-            ModelStateDictionary restoredModelState = (ModelStateDictionary)TempData["mstat"];
-            if (restoredModelState != null)
-            {
-                ModelState.Merge(restoredModelState);
-            }
+            RestoreModelState();
 
             IEnumerable<TaskModel> tasks = team.Tasks
+                .OrderByDescending(t => t.Date)
                 .Select(t => new TaskModel
                 {
                     Name = t.Name,
-                    Id = t.Id
+                    Id = t.Id,
+                    Date = t.Date.ToString()
                 });
 
             TaskListModel model = new TaskListModel
@@ -99,7 +100,7 @@ namespace TaskManager.Web.Controllers
             }
             else
             {
-                TempData["mstat"] = ModelState;
+                SaveModelState(ModelState);
             }
 
             return RedirectToAction(IndexAction, new {teamId = taskModel.TeamId});
@@ -126,18 +127,14 @@ namespace TaskManager.Web.Controllers
             Task task = _manager.GetTask(taskId);
 
             // Verify that task exists, and current user is manager or member of task's team
-            if (UserPrincipal.CurrentPrincipal == null || task == null ||
+            if (task == null ||
                 (task.Team.ManagerId != UserPrincipal.CurrentPrincipal.UserId &&
                  task.Team.Members.All(m => m.Id != UserPrincipal.CurrentPrincipal.UserId)))
             {
                 return View("Error");
             }
 
-            ModelStateDictionary restoredModelState = (ModelStateDictionary)TempData["mstat"];
-            if (restoredModelState != null)
-            {
-                ModelState.Merge(restoredModelState);
-            }
+            RestoreModelState();
 
             TaskDetailsModel.TaskRole role;
             if (UserPrincipal.CurrentPrincipal.IsManager)
@@ -160,6 +157,10 @@ namespace TaskManager.Web.Controllers
                     TaskId = taskId
                 },
                 NewWorker = new AddUserModel
+                {
+                    TaskId = taskId
+                },
+                NewReadiness = new SetReadinessModel
                 {
                     TaskId = taskId
                 },
@@ -192,45 +193,50 @@ namespace TaskManager.Web.Controllers
             return View(model);
         }
 
+        private void ValidateTaskWorker(AddUserModel workerModel)
+        {
+            if (!_manager.UserExists(workerModel.Username))
+            {
+                ModelState.AddModelError("Username",
+                    "Worker not recognized: " + workerModel.Username.Trim());
+            }
+
+            if (!_manager.IsTeamMember(workerModel.Username, workerModel.TeamId))
+            {
+                ModelState.AddModelError("Username",
+                    "This worker is not member of this team: " + workerModel.Username);
+            }
+        }
+
         [HttpPost]
         public ActionResult AddTaskWorker(TaskDetailsModel taskModel)
         {
+            AddUserModel workerModel = taskModel.NewWorker;
+
             if (ModelState.IsValid)
             {
-                AddUserModel workerModel = taskModel.NewWorker;
-
-                if (!_manager.UserExists(workerModel.Username))
-                {
-                    ModelState.AddModelError("Username",
-                        "Worker not recognized: " + workerModel.Username.Trim());
-                    TempData["mstat"] = ModelState;
-                    return RedirectToAction(DetailsAction, new { taskId = taskModel.Task.Id });
-                }
-
-                if (!_manager.IsTeamMember(workerModel.Username, workerModel.TeamId))
-                {
-                    ModelState.AddModelError("Username",
-                        "This worker is not member of this team: " + workerModel.Username);
-                    TempData["mstat"] = ModelState;
-                    return RedirectToAction(DetailsAction, new { taskId = taskModel.Task.Id });
-                }
-
-                _manager.AddTaskWorker(workerModel.Username, workerModel.TaskId);
-
-                return RedirectToAction(DetailsAction, new { taskId = taskModel.Task.Id });
+                ValidateTaskWorker(workerModel);
             }
 
-            TempData["mstat"] = ModelState;
-            return RedirectToAction(DetailsAction, new { taskId = taskModel.Task.Id });
+            if (ModelState.IsValid)
+            {
+                _manager.AddTaskWorker(workerModel.Username, workerModel.TaskId);
+            }
+            else
+            {
+                SaveModelState(ModelState);
+            }
+
+            return RedirectToAction(DetailsAction, new {taskId = taskModel.Task.Id});
         }
 
         [HttpPost]
         public ActionResult AddComment(TaskDetailsModel taskModel)
         {
+            AddCommentModel commentModel = taskModel.NewComment;
+
             if (ModelState.IsValid)
             {
-                AddCommentModel commentModel = taskModel.NewComment;
-
                 _manager.AddComment(new Comment
                 {
                     Content = commentModel.Content,
@@ -238,12 +244,30 @@ namespace TaskManager.Web.Controllers
                     TaskId = commentModel.TaskId,
                     UserId = commentModel.UserId
                 });
-
-                return RedirectToAction(DetailsAction, new { taskId = taskModel.Task.Id });
+            }
+            else
+            {
+                SaveModelState(ModelState);
             }
 
-            TempData["mstat"] = ModelState;
-            return RedirectToAction(DetailsAction, new { taskId = taskModel.Task.Id });
+            return RedirectToAction(DetailsAction, new { taskId = commentModel.TaskId });
+        }
+
+        [HttpPost]
+        public ActionResult SetReadiness(TaskDetailsModel taskModel)
+        {
+            SetReadinessModel readinessModel = taskModel.NewReadiness;
+
+            if (ModelState.IsValid)
+            {
+                _manager.SetReadiness(readinessModel.Percentage, readinessModel.TaskId);
+            }
+            else
+            {
+                SaveModelState(ModelState);
+            }
+
+            return RedirectToAction(DetailsAction, new { taskId = readinessModel.TaskId });
         }
     }
 }

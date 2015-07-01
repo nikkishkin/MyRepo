@@ -92,7 +92,7 @@ namespace TaskManager.Logic.Services
         public bool IsFreeWorker(string username)
         {
             User worker = GetUser(username);
-            return worker.TeamForMember != null;
+            return worker.TeamForMember == null;
         }
 
         public void AddUser(User user)
@@ -145,6 +145,7 @@ namespace TaskManager.Logic.Services
                 TeamId = teamId,
                 Percentage = 0,
                 IsDone = false,
+                Date = DateTime.Now
             };
 
             string[] workers = workersStr.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -184,14 +185,20 @@ namespace TaskManager.Logic.Services
 
         public void AddTeamMember(string username, int teamId)
         {
-            Team team = GetTeam(teamId);
-            team.Members.Add(GetUser(username));
+            _userRepository.AddToTeam(username, teamId);
+            //Team team = GetTeam(teamId);
+            //team.Members.Add(GetUser(username));
         }
 
         public void AddTaskWorker(string username, int taskId)
         {
             Task task = GetTask(taskId);
             task.Workers.Add(GetUser(username.Trim()));
+        }
+
+        public void SetReadiness(int percentage, int taskId)
+        {
+            _taskRepository.SetReadiness(percentage, taskId);
         }
     }
 }

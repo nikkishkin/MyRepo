@@ -1,5 +1,5 @@
 ﻿@using TaskManager.Web.Controllers
-@model TaskManager.Web.Models.SignUpModel
+@model TaskManager.Web.Models.Account.SignUpModel
 
 @{
     ViewBag.Title = "SignUp";
@@ -21,13 +21,13 @@
     @Html.TextBoxFor(x => x.LastName, new { @class = "textInput" })
     <br>
     @Html.LabelFor(x => x.Password)<br>
-    @Html.TextBoxFor(x => x.Password, new { @class = "textInput" })
+    @Html.PasswordFor(x => x.Password, new { @class = "textInput" })
     <br>
     @Html.LabelFor(x => x.Email)<br>
     @Html.TextBoxFor(x => x.Email, new { @class = "textInput" })
-    <br>
-    @Html.LabelFor(x => x.IsManager)<br>
+    <br><br>
     @Html.CheckBoxFor(x => x.IsManager)
+    @Html.LabelFor(x => x.IsManager)
     <br><br>
     <input type="submit" value="Submit" class="btn" name="submit_authorize">
     @Html.HiddenFor(x => x.ReturnUrl)

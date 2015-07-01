@@ -1,10 +1,11 @@
 ﻿@using TaskManager.Web.Controllers
-@model TaskManager.Web.Models.TaskListModel
+@model TaskManager.Web.Models.Tasks.TaskListModel
 
 @{
     ViewBag.Title = "Index";
 }
 
+<br>
 <div class="teamEntry entry">
     @Model.TeamName
 </div>
@@ -12,21 +13,27 @@
 @foreach (var task in Model.Tasks)
 {
     <div class="taskEntry entry">
-        @*@Html.ActionLink()*@
-        @task.Name
+        @Html.ActionLink(task.Name, TasksController.DetailsAction, new {taskId = task.Id})
     </div>
 }
 
 @if (Model.IsManager)
 {
     <form action="@Url.Action(TasksController.AddTaskAction, TasksController.ControllerName)" method="post" class="fixedForm" id="addTaskForm">
-        @Html.LabelFor(m => m.NewTask.Name)
+        @Html.ValidationSummary(false)
+        @Html.LabelFor(m => m.NewTask.Name)<br>
         @Html.TextBoxFor(m => m.NewTask.Name, new { @class = "textInput" })
-        @Html.LabelFor(m => m.NewTask.Content)
+        <br>
+        @Html.LabelFor(m => m.NewTask.Content)<br>
         @Html.TextBoxFor(m => m.NewTask.Content, new { @class = "textInput" })
-        @Html.LabelFor(m => m.NewTask.Workers)
+        <br>
+        @Html.LabelFor(m => m.NewTask.Workers)<br>
         @Html.TextBoxFor(m => m.NewTask.Workers, new { @class = "textInput" })
         @Html.HiddenFor(m => m.NewTask.TeamId)<br><br>
         <input type="submit" value="Add task" name="submit_addtask" class="btn" id="addTaskBtn">
     </form>
 }
+
+<form action="@Url.Action(AccountController.LogOutAction, AccountController.ControllerName)" method="post" class="" id="logOutForm">
+    <input type="submit" value="Log out" name="submit_logout" class="btn" id="logOutBtn">
+</form>

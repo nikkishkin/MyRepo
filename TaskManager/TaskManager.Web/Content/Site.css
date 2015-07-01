@@ -10,13 +10,31 @@
 	border-radius: 7px;
 }
 
-#addTeamForm, #addUserForm, #addTaskForm {
+#addTeamForm, #addTeamMemberForm, #addTaskForm, #addCommentForm {
     text-align: center;
 	background: #F5F5DC;
 	border-radius: 15px;
 	width: 300px;
 	padding: 10px;
     top: 36px;
+}
+
+#setReadinessForm {
+    text-align: center;
+    background: #CCCC99;
+	border-radius: 15px;
+	width: 300px;
+	padding: 10px;
+    top: 150px;
+}
+
+#addTaskWorkerForm {
+    text-align: center;
+    background: #EEEEEE;
+	border-radius: 15px;
+	width: 300px;
+	padding: 10px;
+    top: 150px;
 }
 
 .entry {
@@ -31,8 +49,16 @@
     margin-top: 10px;
 }
 
-.teamEntry, .userEntry, .taskEntry {
-	background-color: #F8F8F8;
+.teamEntry {
+	background-color: #C0C0C0;
+}
+
+.taskEntry {
+    background-color: #F8F8F8;
+}
+
+.userEntry {
+    background-color: #FFFFCC;
 }
 
 .logOutForm {
@@ -44,12 +70,116 @@
     right: 140px;
 }
 
+#logOutUsers {
+    top: 170px;
+    right: 140px;
+}
+
+#logOutTasks {
+    top: 260px;
+    right: 140px;
+}
+
+#logOutTaskDetails {
+    top: 280px;
+    right: 140px;
+}
+
+#logOutNoTeam {
+    top: 28px;
+    right: 36px;
+}
+
+#logOutForm {
+    top: 28px;
+    left: 36px;
+    position: fixed;
+}
+
 #logOutbtn, #signUpBtn {
  background: #ADD8E6;
 }
 
 #logOutbtn:hover, #signUpBtn:hover {
 	background: #3cb0fd;
+}
+
+/*.field-validation-error {
+    background: #FFCC99;
+	margin-bottom: -97px;
+
+    padding-top:4px;
+    padding-bottom:4px;
+    padding-left:4px;
+    padding-right:4px;
+    border-radius: 7px;
+    width: 500px;
+	text-align: center;
+	margin: auto;
+
+	font-size: 20px;
+	margin-top: 20px;
+
+    color: black !important;
+    font-weight: normal;
+}*/
+
+.authorization .validation-summary-errors {
+    top: 20px;
+    margin-left: -75px;
+    width: 500px;
+}
+
+#setReadinessForm .validation-summary-errors {
+    top: 110px;
+    right: 5px;
+    width: 300px;
+}
+
+#addTeamForm .validation-summary-errors {
+    top: 200px;
+    right: 5px;
+    width: 300px;
+}
+
+#addUserForm .validation-summary-errors {
+    top: 120px;
+    right: 5px;
+    width: 300px;
+}
+
+#addTaskForm .validation-summary-errors {
+    top: 200px;
+    right: 5px;
+    width: 300px;
+}
+
+.validation-summary-errors {
+    background: #FFCC99;
+	margin-bottom: -97px;
+
+    padding-top:4px;
+    padding-bottom:4px;
+    padding-left:4px;
+    padding-right:4px;
+    border-radius: 7px;   
+	text-align: center;
+	margin: auto;
+
+	font-size: 18px;
+	margin-top: 20px;
+
+    color: black !important;
+    font-weight: normal !important;
+
+    position: absolute;
+}
+
+.centerLink {
+    /*margin: 10px auto;
+    width: 100px;*/
+    margin-top: 10px;
+    text-align:center
 }
 
 /*---------------------------------------*/
@@ -283,51 +413,6 @@ a:visited {
 
 #errorContainer{
 	display: none;
-}
-
-.field-validation-error {
-    background: #FFCC99;
-	margin-bottom: -97px;
-
-    padding-top:4px;
-    padding-bottom:4px;
-    padding-left:4px;
-    padding-right:4px;
-    border-radius: 7px;
-    width: 500px;
-	text-align: center;
-	margin: auto;
-
-	font-size: 20px;
-	margin-top: 20px;
-
-    color: black !important;
-    font-weight: normal;
-}
-
-.validation-summary-errors {
-    background: #FFCC99;
-	margin-bottom: -97px;
-
-    padding-top:4px;
-    padding-bottom:4px;
-    padding-left:4px;
-    padding-right:4px;
-    border-radius: 7px;
-    width: 500px;
-	text-align: center;
-	margin: auto;
-
-	font-size: 18px;
-	margin-top: 20px;
-
-    color: black !important;
-    font-weight: normal !important;
-
-    position: absolute;
-    top: 20px;
-
-    margin-left: -75px;
 }
 
 /*.validation-summary-errors li {

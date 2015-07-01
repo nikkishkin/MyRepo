@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using TaskManager.Core;
 using TaskManager.Entities;
 using TaskManager.Logic.Services;
+using TaskManager.Web.Filters;
 using TaskManager.Web.Models;
+using TaskManager.Web.Models.Users;
 
 namespace TaskManager.Web.Controllers
 {
+    [Authorize, ManagerOnly]
     public class UsersController : TaskManagerController
     {
         public const string ControllerName = "Users";
 
         public const string IndexAction = "Index";
-        public const string AddUserAction = "AddUser";
+        public const string AddTeamMemberAction = "AddTeamMember";
 
         private readonly TaskManagerBlo _manager;
 
@@ -29,8 +31,7 @@ namespace TaskManager.Web.Controllers
         public ActionResult Index(int teamId)
         {
             Team team = _manager.GetTeam(teamId);
-            if (UserPrincipal.CurrentPrincipal == null || !UserPrincipal.CurrentPrincipal.IsManager ||
-                team == null || team.ManagerId != UserPrincipal.CurrentPrincipal.UserId)
+            if (team == null || team.ManagerId != UserPrincipal.CurrentPrincipal.UserId)
             {
                 return View("Error");
             }
@@ -53,37 +54,46 @@ namespace TaskManager.Web.Controllers
             {
                 TeamName = team.Name, 
                 Members = members, 
-                NewUser = new AddUserModel {TeamId = teamId}
+                NewUser = new AddUserModel {TeamId = teamId},
+                TeamId = teamId
             };
             return View(model);
         }
 
+        private void ValidateTeamMember(AddUserModel userModel)
+        {
+            if (!_manager.UserExists(userModel.Username))
+            {
+                ModelState.AddModelError("Username",
+                    "This user was not recognized: " + userModel.Username.Trim());
+            }
+
+            if (!_manager.IsFreeWorker(userModel.Username))
+            {
+                ModelState.AddModelError("Username",
+                    "This worker is already in some team: " + userModel.Username.Trim());
+            }
+        }
+
         [HttpPost]
-        public ActionResult AddUser(UserListModel userList)
+        public ActionResult AddTeamMember(UserListModel userList)
         {
             AddUserModel userModel = userList.NewUser;
 
             if (ModelState.IsValid)
             {
-                if (!_manager.UserExists(userModel.Username))
-                {
-                    ModelState.AddModelError("Username",
-                        "This user was not recognized: " + userModel.Username.Trim());
-                    TempData["mstat"] = ModelState;
-                    return RedirectToAction(IndexAction, new { teamId = userModel.TeamId });
-                }
-
-                if (!_manager.IsFreeWorker(userModel.Username))
-                {
-                    ModelState.AddModelError("Username",
-                        "This worker is already in some team: " + userModel.Username.Trim());
-                }
-
-                _manager.AddTeamMember(userModel.Username, userModel.TeamId);
-                return RedirectToAction(IndexAction, new {teamId = userModel.TeamId});
+                ValidateTeamMember(userModel);
             }
 
-            TempData["mstat"] = ModelState;
+            if (ModelState.IsValid)
+            {
+                _manager.AddTeamMember(userModel.Username, userModel.TeamId);
+            }
+            else
+            {
+                SaveModelState(ModelState);
+            }
+
             return RedirectToAction(IndexAction, new { teamId = userModel.TeamId });
         }
     }

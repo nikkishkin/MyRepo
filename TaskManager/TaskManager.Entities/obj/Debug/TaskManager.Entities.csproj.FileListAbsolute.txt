@@ -1,0 +1,10 @@
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\bin\Debug\TaskManager.Entities.dll.config
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\bin\Debug\TaskManager.Entities.dll
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\bin\Debug\TaskManager.Entities.pdb
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\bin\Debug\EntityFramework.dll
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\bin\Debug\EntityFramework.SqlServer.dll
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\bin\Debug\EntityFramework.xml
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\bin\Debug\EntityFramework.SqlServer.xml
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\obj\Debug\TaskManager.Entities.csprojResolveAssemblyReference.cache
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\obj\Debug\TaskManager.Entities.dll
+C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Entities\obj\Debug\TaskManager.Entities.pdb
