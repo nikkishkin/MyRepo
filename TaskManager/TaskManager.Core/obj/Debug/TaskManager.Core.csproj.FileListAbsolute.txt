@@ -1,5 +1,0 @@
-C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Core\bin\Debug\TaskManager.Core.dll
-C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Core\bin\Debug\TaskManager.Core.pdb
-C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Core\obj\Debug\TaskManager.Core.dll
-C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Core\obj\Debug\TaskManager.Core.pdb
-C:\XIS\6 sem\EpamMy\Project\My\App\TaskManager\TaskManager.Core\obj\Debug\TaskManager.Core.csprojResolveAssemblyReference.cache
