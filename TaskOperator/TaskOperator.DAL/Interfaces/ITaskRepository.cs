@@ -22,5 +22,7 @@ namespace TaskOperator.DAL.Interfaces
         User GetTaskWorker(Task task);
 
         User GetTaskWorker(int taskId);
+
+        void SetPercentage(int id, int percentage);
     }
 }

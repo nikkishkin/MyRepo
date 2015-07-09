@@ -7,7 +7,6 @@ using TaskOperator.Core;
 using TaskOperator.Entities;
 using TaskOperator.Entities.Enums;
 using TaskOperator.Logic.Interfaces;
-using TaskOperator.Logic.Services;
 using TaskOperator.Web.Models;
 using TaskOperator.Web.Models.Tasks;
 
@@ -19,9 +18,14 @@ namespace TaskOperator.Web.Controllers
 
         public const string ManagerTasksAction = "ManagerTasks";
         public const string WorkerTasksAction = "WorkerTasks";
+
         public const string AddTaskAction = "AddTask";
+
         public const string SaveManagerTaskAction = "SaveManagerTask";
         public const string GetManagerTaskAction = "GetManagerTask";
+
+        public const string SaveWorkerTaskAction = "SaveWorkerTask";
+        public const string GetWorkerTaskAction = "GetWorkerTask";
 
         private const string NoUserString = "No user";
         private const int NoUserId = -1;
@@ -108,6 +112,13 @@ namespace TaskOperator.Web.Controllers
             return PartialView("_ManagerTask", model);
         }
 
+        public PartialViewResult GetWorkerTask(int taskId)
+        {
+            TaskModel model = GetTaskModel(_taskBlo.GetTask(taskId));
+
+            return PartialView("_WorkerTask", model);
+        }
+
         private void FillCollections(TaskModel model)
         {
             model.WorkerOptions = GetWorkerOptions(model);
@@ -179,6 +190,19 @@ namespace TaskOperator.Web.Controllers
             FillCollections(taskModel);
 
             return PartialView("_ManagerTask", taskModel);
+        }
+
+        [HttpPost]
+        public PartialViewResult SaveWorkerTask(TaskModel taskModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _taskBlo.SetPercentage(taskModel.Id, taskModel.Percentage);
+            }
+
+            taskModel = GetTaskModel(_taskBlo.GetTask(taskModel.Id));
+
+            return PartialView("_WorkerTask", taskModel);
         }
     }
 }

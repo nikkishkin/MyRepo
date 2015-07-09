@@ -6,9 +6,9 @@ namespace TaskOperator.DAL.UnitOfWork
     {
         public TaskOperatorEntities Context { get; private set; }
 
-        public EntityFrameworkUnitOfWork(TaskOperatorEntities context)
+        public EntityFrameworkUnitOfWork()
         {
-            Context = context;
+            Context = new TaskOperatorEntities();
         }
 
         public TaskOperatorEntities GetContext()

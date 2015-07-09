@@ -29,11 +29,14 @@ namespace TaskOperator.Web.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult LogOut()
+        public RedirectToRouteResult LogOut()
         {
             UserPrincipal.CurrentPrincipal = UserPrincipal.Empty;
             FormsAuthentication.SignOut();
-            return PartialView("_LogOut");
+
+            //return PartialView("_LogOut");
+
+            return RedirectToAction(HomeController.IndexAction, HomeController.ControllerName);
         }
 
         [HttpPost]

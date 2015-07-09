@@ -147,6 +147,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TaskOperatorController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
+    <Compile Include="DataProvider.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -272,6 +273,7 @@
     <Content Include="Views\Tasks\_Tasks.cshtml" />
     <Content Include="Views\Tasks\_AddTask.cshtml" />
     <Content Include="Views\Tasks\_ManagerTask.cshtml" />
+    <Content Include="Views\Tasks\_WorkerTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

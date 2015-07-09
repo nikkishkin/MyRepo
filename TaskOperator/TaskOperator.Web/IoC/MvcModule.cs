@@ -11,8 +11,10 @@ namespace TaskOperator.Web.IoC
         public override void Load()
         {
             Bind<IUnitOfWork>().To<EntityFrameworkUnitOfWork>()
-                .InRequestScope()
-                .WithConstructorArgument("context", new TaskOperatorEntities());
+                .InTransientScope();
+
+            Bind<IDataProvider>().To<DataProvider>()
+                .InSingletonScope();
         }
     }
 }

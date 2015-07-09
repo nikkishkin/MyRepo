@@ -11,6 +11,7 @@ namespace TaskOperator.Web.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.IsAuthorized = UserPrincipal.CurrentPrincipal == UserPrincipal.Empty ? "0" : "1";
             return View();
         }
 

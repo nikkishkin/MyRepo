@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace TaskOperator.Web.Models.Tasks
@@ -8,6 +9,8 @@ namespace TaskOperator.Web.Models.Tasks
         public int Id { get; set; }
         public string Name { get; set; }
         public string Content { get; set; }
+
+        [Range(0, 100)]
         public int Percentage { get; set; }
         public byte State { get; set; }
 

@@ -6,6 +6,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
 using TaskOperator.Core;
+using TaskOperator.Web.Controllers;
 
 namespace TaskOperator.Web
 {
@@ -22,6 +23,20 @@ namespace TaskOperator.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        protected void Application_BeginRequest()
+        {
+            IUnitOfWork unitOfWork = DependencyResolver.Current.GetService<IUnitOfWork>();
+
+            HttpContext.Current.Items.Add(TaskOperatorController.REQUEST_STORAGE_UNIT_OF_WORK, unitOfWork);
+        }
+
+        protected void Application_EndRequest()
+        {
+            IUnitOfWork unitOfWork = (IUnitOfWork)HttpContext.Current.Items[TaskOperatorController.REQUEST_STORAGE_UNIT_OF_WORK];
+
+            unitOfWork.Dispose();
         }
 
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)

@@ -6,6 +6,8 @@ namespace TaskOperator.Web.Controllers
 {
     public class TaskOperatorController : Controller
     {
+        public const string REQUEST_STORAGE_UNIT_OF_WORK = "UnitOfWork";
+
         public const string ErrorView = "Error";
 
         private const string ModelStateTempDataKey = "mstat";

@@ -10,44 +10,50 @@ namespace TaskOperator.DAL.Repository
 {
     public class TaskRepository : ITaskRepository
     {
-        private readonly IEntityFrameworkUnitOfWork _unitOfWork;
+        private readonly IDataProvider _dataProvider;
 
-        public TaskRepository(IUnitOfWork unitOfWork)
+        public TaskRepository(IDataProvider dataProvider)
         {
-            _unitOfWork = (IEntityFrameworkUnitOfWork)unitOfWork;
+            _dataProvider = dataProvider;
+        }
+
+        private TaskOperatorEntities GetContext()
+        {
+            return ((IEntityFrameworkUnitOfWork) (_dataProvider.GetUnitOfWork())).GetContext();
         }
 
         public void AddTask(Task task)
         {
-            _unitOfWork.GetContext().Task.Add(task);
-            _unitOfWork.GetContext().SaveChanges();
+            TaskOperatorEntities context = GetContext();
+            context.Task.Add(task);
+            context.SaveChanges();
         }
 
         public IEnumerable<Task> GetWorkerTasks(int workerId)
         {
-            return _unitOfWork.GetContext().Task.Where(t => t.WorkerId == workerId).ToArray();
+            return GetContext().Task.Where(t => t.WorkerId == workerId).ToArray();
         }
 
         public IEnumerable<Task> GetAllTasks()
         {
-            return _unitOfWork.GetContext().Task.ToArray();
+            return GetContext().Task.ToArray();
         }
 
         public Task GetTask(int id)
         {
-            return _unitOfWork.GetContext().Task.SingleOrDefault(t => t.Id == id);
+            return GetContext().Task.SingleOrDefault(t => t.Id == id);
         }
 
         public void SetReadiness(int percentage, int taskId)
         {
             Task task = GetTask(taskId);
             task.Percentage = percentage;
-            _unitOfWork.GetContext().SaveChanges();
+            GetContext().SaveChanges();
         }
 
         public void SaveManagerTask(int id, string name, string content, byte state, int workerId)
         {
-            Task dbTask = _unitOfWork.GetContext().Task.Find(id);
+            Task dbTask = GetContext().Task.Find(id);
             dbTask.Name = name;
             dbTask.Content = content;
             dbTask.State = state;
@@ -60,8 +66,8 @@ namespace TaskOperator.DAL.Repository
             {
                 dbTask.WorkerId = null;
             }
-            
-            _unitOfWork.GetContext().SaveChanges();
+
+            GetContext().SaveChanges();
         }
 
         public bool IsWorker(int workerId, int taskId)
@@ -80,13 +86,20 @@ namespace TaskOperator.DAL.Repository
             {
                 return null;
             }
-            return _unitOfWork.GetContext().User.SingleOrDefault(w => w.Id == task.WorkerId);
+            return GetContext().User.SingleOrDefault(w => w.Id == task.WorkerId);
         }
 
         public User GetTaskWorker(int taskId)
         {
             Task task = GetTask(taskId);
             return GetTaskWorker(task);
+        }
+
+        public void SetPercentage(int id, int percentage)
+        {
+            Task task = GetTask(id);
+            task.Percentage = percentage;
+            GetContext().SaveChanges();
         }
     }
 }

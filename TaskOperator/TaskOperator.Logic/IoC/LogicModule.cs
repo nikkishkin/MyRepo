@@ -15,6 +15,10 @@ namespace TaskOperator.Logic.IoC
             Bind<IUserBlo>()
                 .To<UserBlo>()
                 .InSingletonScope();
+
+            Bind<EmailService>()
+                .To<EmailService>()
+                .InSingletonScope();
         }
     }
 }

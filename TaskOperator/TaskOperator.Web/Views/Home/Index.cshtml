@@ -1,14 +1,24 @@
-﻿@{
+﻿@using TaskOperator.Web.Controllers
+@{
     ViewBag.Title = "Index";
 }
 
-<div class="header">
-    <button class="btn" id="popupSignUpBtn">Sign up</button>
-    <button class="btn" id="popupLogInBtn">Log in</button>
+<span id="auth">@ViewBag.IsAuthorized</span>
 
-    @{
-        Html.RenderPartial("~/Views/Account/_LogOut.cshtml");
+<div class="header">
+    @if (ViewBag.IsAuthorized == "0")
+    {
+        <button class="btn" id="popupSignUpBtn">Sign up</button>
+        <button class="btn" id="popupLogInBtn">Log in</button>
     }
+
+    <form action="@Url.Action(AccountController.LogOutAction, AccountController.ControllerName)" method="post" id="logOutForm">
+        <input type="submit" value="Log out" name="submit_logout" class="btn" id="logOutBtn">
+    </form>
+
+    @*@{
+        Html.RenderPartial("~/Views/Account/_LogOut.cshtml");
+    }*@
 
     @*<button class="btn" id="logOutBtn">Log out</button>*@
 </div>
@@ -21,7 +31,8 @@
 </div>
 
 <div id="pageContent">
-    @{
+    @if (ViewBag.IsAuthorized == "0")
+    {
         Html.RenderPartial("_Intro");
     }
 </div>

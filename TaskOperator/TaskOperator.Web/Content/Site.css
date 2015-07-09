@@ -1,6 +1,10 @@
 ﻿/* My styles
 -----------------------------------------------------------*/
 
+#auth {
+    display: none;
+}
+
 #left {
     float: left;
     text-align: center;
@@ -79,7 +83,28 @@
     text-overflow: ellipsis;
 }
 
-.taskId {
+.wrk-taskPercentage {
+    float: left;
+    margin-left: 5px;
+    width: 25px;
+    text-align: left;
+}
+
+.wrk-taskState {
+    float: right;
+    margin-right: 5px;
+    width: 80px;
+    text-align: center;
+}
+
+.wrk-taskName {
+    float: left;
+    margin-left: 5px;
+    width: 370px;
+    text-align: center;
+}
+
+.mng-taskId {
     /*position: fixed;
     left: 5px;*/
     float: left;
@@ -88,25 +113,30 @@
     text-align: left;
 }
 
-.taskName {
+.mng-taskName {
     float: left;
     margin-left: 5px;
     width: 270px;
     text-align: center;
 }
 
-.taskState {
+.mng-taskState {
     float: right;
     margin-right: 5px;
     width: 60px;
     text-align: center;
 }
 
-.taskWorker {
+.mng-taskWorker {
     float: right;
     margin-right: 10px;
     width: 100px;
     text-align: right;
+}
+
+#wrk-taskContent {
+    display: inline-block;
+    width: 210px;
 }
 
 #taskContent {
@@ -134,6 +164,36 @@
 	background: #F5F5DC;
 	width: 430px;
     overflow: hidden;
+}
+
+#workerTaskForm {
+    border: 1px solid black;
+    text-align: center;
+    padding: 20px;
+	background: #F5F5DC;
+	width: 350px;
+    overflow: hidden;
+}
+
+#workerTaskForm #id, #workerTaskForm #percentage, #workerTaskForm #state, #workerTaskForm #worker {
+    /*float: right;*/
+    margin: 5px;
+}
+
+#workerTaskForm  #right {
+    margin-left: 5px;
+}
+
+#workerTaskForm  #left {
+    margin-top: 5px;
+}
+
+#wrk-percentage {
+    width: 30px;
+}
+
+#workerTaskForm #name {
+    width: 210px;
 }
 
 #addTeamForm, #addTeamMemberForm, #addTaskForm, #addCommentForm {

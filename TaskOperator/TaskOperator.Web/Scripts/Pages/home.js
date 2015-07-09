@@ -16,6 +16,11 @@
                 $('#loading').hide();
             }
         });
+
+        if ($("#auth").html() === "1") {
+            $("#logOutForm").show();
+            sendGetTasksRequest();
+        }
     });
 
     function showPopupHandler(event) {

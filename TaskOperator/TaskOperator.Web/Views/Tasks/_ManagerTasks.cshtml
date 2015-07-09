@@ -6,25 +6,30 @@
 @foreach (var task in Model)
 {
     <div class="taskEntry entry">
-        <span class="taskId clipped">@task.Id</span>
+        <span class="mng-taskId clipped">@task.Id</span>
 
         @{
             AjaxOptions getTaskOptions = TaskOperatorController.GetAjaxOptions("taskPlaceholder",
                 Url.Action(TasksController.GetManagerTaskAction, TasksController.ControllerName, new { taskId = task.Id }), "dimBackground");
         }
-        @Ajax.ActionLink(task.Name, null, null, getTaskOptions, new { @class = "taskName clipped" })
+        @Ajax.ActionLink(task.Name, null, null, getTaskOptions, new { @class = "mng-taskName clipped" })
 
-        <span class="taskState clipped">@(((TaskState) task.State).ToString())</span>
+        <span class="mng-taskState clipped">@(((TaskState)task.State).ToString())</span>
+
         @if (task.IsAssigned)
         {
-            <span class="taskWorker clipped">@task.Worker.Username</span>
+            <span class="mng-taskWorker clipped">@task.Worker.Username</span>
         }
         else
         {
-            <span class="taskWorker clipped">No users!</span>
+            <span class="mng-taskWorker clipped">No users!</span>
         }
     </div>
 }
+
+<div id="page-cover">
+    <div id="taskPlaceholder"></div>
+</div>
 
 @{
     Html.RenderPartial("~/Views/Tasks/_AddTask.cshtml", new AddTaskModel());
