@@ -1,0 +1,14 @@
+﻿@using ArtGallery.Controllers
+@model ArtGallery.Models.Forum.CommentModel
+
+@{
+    AjaxOptions addCommentOptions = ExhibitionController.GetAjaxOptions("addCommentForm",
+            Url.Action(ForumController.AddCommentAction, ForumController.ControllerName), "onAddCommentSuccess");
+    using (Ajax.BeginForm(null, null, addCommentOptions, new { id = "addCommentForm" }))
+    {
+        @Html.TextBoxFor(m => m.Content, new {id = "commentContentInput"})
+        @Html.HiddenFor(m => m.PictureIndex)
+        <input type="submit" value="Add comment" class="btn">
+        @Html.ValidationSummary(false)
+    }
+}
