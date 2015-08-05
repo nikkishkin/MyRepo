@@ -1,0 +1,7 @@
+C:\XIS\6 sem\EpamMy\Lab .NET\ToDo\CustomToDoManager\obj\Debug\CustomToDoManager.csprojResolveAssemblyReference.cache
+C:\XIS\6 sem\EpamMy\Lab .NET\ToDo\CustomToDoManager\bin\Debug\CustomToDoManager.dll.config
+C:\XIS\6 sem\EpamMy\Lab .NET\ToDo\CustomToDoManager\bin\Debug\CustomToDoManager.dll
+C:\XIS\6 sem\EpamMy\Lab .NET\ToDo\CustomToDoManager\bin\Debug\CustomToDoManager.pdb
+C:\XIS\6 sem\EpamMy\Lab .NET\ToDo\CustomToDoManager\bin\Debug\ToDo.Infrastructure.dll
+C:\XIS\6 sem\EpamMy\Lab .NET\ToDo\CustomToDoManager\obj\Debug\CustomToDoManager.dll
+C:\XIS\6 sem\EpamMy\Lab .NET\ToDo\CustomToDoManager\obj\Debug\CustomToDoManager.pdb
