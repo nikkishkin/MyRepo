@@ -89,28 +89,30 @@ namespace CustomToDoManager
             }
         }
 
-        public void CreateToDoItem(IToDoItem todo)
+        public async void CreateToDoItem(IToDoItem todo)
         {
+            int id;
+            using (var client = new ToDoManagerClient())
+            {
+                await client.CreateToDoItemAsync(new ToDoItem
+                {
+                    IsCompleted = todo.IsCompleted,
+                    Name = todo.Name,
+                    UserId = todo.UserId
+                });
+                ToDoItem[] items = await client.GetTodoListAsync(_currentUserId);
+                id = items.First(i => i.UserId == todo.UserId && i.Name == todo.Name).ToDoId;
+            }
+
             string json = File.ReadAllText("ItemsFile.json");
             List<User> users = new JavaScriptSerializer().Deserialize<List<User>>(json);
 
             users
                 .First(u => u.Id == todo.UserId)
-                .ToDoList.Add(new FileStorageItem {Description = todo.Name, Id = todo.ToDoId, IsComplete = todo.IsCompleted});
+                .ToDoList.Add(new FileStorageItem { Description = todo.Name, Id = id, IsComplete = todo.IsCompleted });
 
             json = new JavaScriptSerializer().Serialize(users);
             File.WriteAllText("ItemsFile.json", json);
-
-            using (var client = new ToDoManagerClient())
-            {
-                client.CreateToDoItem(new ToDoItem
-                {
-                    IsCompleted = todo.IsCompleted,
-                    Name = todo.Name,
-                    ToDoId = todo.ToDoId,
-                    UserId = todo.UserId
-                });
-            }
         }
 
         public async void DeleteToDoItem(int todoItemId)
