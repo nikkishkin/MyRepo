@@ -1,28 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CustomToDoManager
 {
+    /// <summary>
+    /// User class fo file storage
+    /// </summary>
     public class User
     {
         public User()
         {
-            toDoList = new List<Item>();
+            ToDoList = new List<FileStorageItem>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<Item> toDoList { get; set; }
-
+        public List<FileStorageItem> ToDoList { get; set; }
     }
-
-    public class Item
-    {
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public bool IsComplete { get; set; }
-    }
-
 }
